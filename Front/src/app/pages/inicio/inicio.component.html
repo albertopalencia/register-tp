@@ -1,0 +1,128 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h5 class="m-0 font-weight-bold text-black">Inscripci&oacute;n al servicio</h5>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <p class="text-muted">
+              <strong>Ingrese el NIT de la persona natural o juridica para la que realizar&aacute; el tr&aacute;mite,
+                sin incluir el digito de verificaci&oacute;n. Luego seleccione Continuar para completar su
+                solicitud.</strong>
+            </p>
+          </div>
+          <form class="buscar" [formGroup]="formSearch">
+            <div class="form-group">
+              <input type="text" class="form-control" formControlName="nit" placeholder="Nit" minlength="8"
+                maxlength="14" [class.is-invalid]="nit">
+            </div>
+            <div class="btn-group  btn-block">
+              <button type="button" (click)="buscarRegistro()" class="btn btn-danger" [disabled]="!formSearch.valid">Continuar</button>&nbsp;
+              <button type="reset" class="btn btn-dark">Regresar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12" *ngIf="user.identificationTypeId > 0">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h5 class="m-0 font-weight-bold text-black">Datos de la persona natural o jur&iacute;dica que solicita el
+            servicio de tr&aacute;mites virtuales: </h5>
+        </div>
+        <div class="card-body">
+          <p class="title-user">
+            La empresa se encuentra registrada en la C&aacute;mara de Comercio de Medell&iacute;n para Antioquia. Para
+            acceder al servicio de Tr&aacute;mites Virtuales se utilizar&aacute;n los datos reportados en el registro.
+            <br />
+            Los campos marcados con aster&iacute;sco (*) son obligatorios.
+          </p>
+          <form class="cliente" [formGroup]="form" (ngSubmit)="guardarRegistro()">
+            <div class="form-group row">
+              <div class="col-md-12">
+                <label for="usuarioId">Naturaleza:<small class="color-required">*</small></label>
+                <select class="form-control " id="tipoIdentificacionId"
+                  (change)="onIdentificationChange($event.target.value)">
+                  <option value="0" selected disabled>Seleccione</option>
+                  <option *ngFor="let item of listIdentification" [value]="item.id">
+                    {{item.type}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="!showFieldUser">
+              <div class="col-md-12">
+                <label for="companyName">Nombre / Raz&oacute;n social:<small class="color-required">*</small></label>
+                <input type="text" class="form-control">
+              </div>
+            </div>
+            <div *ngIf="showFieldUser === true">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="firstName">FirstName:<small class="color-required">*</small></label>
+                    <input type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="firstName">SecondName:</label>
+                    <input type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="firstName">FirstLastName:<small class="color-required">*</small></label>
+                    <input type="text" class="form-control">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="firstName">Second LastName: </label>
+                    <input type="text" class="form-control">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-6">
+                  <label for="firstName">E-mail: </label>
+                  <input type="email" class="form-control"  >
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-12">
+                <label for="direccion">Direcci&oacute;n:<small class="color-required">*</small></label>
+                <input type="text" class="form-control">
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-12">
+                <label for="municipioId">Municipio:<small class="color-required">*</small></label>
+                <select class="form-control " id="municipioId">
+                  <option value="0" selected disabled>Seleccione</option>
+                  <option *ngFor="let item of listMunicipios" [value]="item.id">
+                    {{item.name}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-6">
+                <label for="usuarioId">Telefono 1:*</label>
+                <input type="text" class="form-control" id="cellphone" >
+              </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn btn-danger btn-block">Continuar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

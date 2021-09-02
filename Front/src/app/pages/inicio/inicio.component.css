@@ -1,0 +1,9 @@
+.title-user {
+  background-color: #CFECF0;
+  padding:10px 10px 5px 10px;
+  border-radius:8px;
+}
+
+.color-required {
+  color: red;
+}
