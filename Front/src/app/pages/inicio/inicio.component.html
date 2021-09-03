@@ -17,7 +17,7 @@
           <form class="buscar" [formGroup]="formSearch">
             <div class="form-group">
               <input type="text" class="form-control" formControlName="nit" placeholder="Nit" minlength="8"
-                maxlength="14" [class.is-invalid]="nit">
+                maxlength="14" [class.is-invalid]="nitNoValido">
             </div>
             <div class="btn-group  btn-block">
               <button type="button" (click)="buscarRegistro()" class="btn btn-danger" [disabled]="!formSearch.valid">Continuar</button>&nbsp;
@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="col-lg-12" *ngIf="user.identificationTypeId > 0">
+    <div class="col-lg-12" *ngIf="showUser">
       <div class="card shadow mb-4">
         <div class="card-header py-3">
           <h5 class="m-0 font-weight-bold text-black">Datos de la persona natural o jur&iacute;dica que solicita el
@@ -46,7 +46,7 @@
                 <label for="usuarioId">Naturaleza:<small class="color-required">*</small></label>
                 <select class="form-control " id="tipoIdentificacionId"
                   (change)="onIdentificationChange($event.target.value)">
-                  <option value="0" selected disabled>Seleccione</option>
+                  <option value="" selected disabled>Seleccione</option>
                   <option *ngFor="let item of listIdentification" [value]="item.id">
                     {{item.type}}
                   </option>
@@ -56,7 +56,7 @@
             <div class="form-group row" *ngIf="!showFieldUser">
               <div class="col-md-12">
                 <label for="companyName">Nombre / Raz&oacute;n social:<small class="color-required">*</small></label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" formControlName="companyName">
               </div>
             </div>
             <div *ngIf="showFieldUser === true">
@@ -64,7 +64,7 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="firstName">FirstName:<small class="color-required">*</small></label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" formControlName="firstName">
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -105,7 +105,7 @@
               <div class="col-md-12">
                 <label for="municipioId">Municipio:<small class="color-required">*</small></label>
                 <select class="form-control " id="municipioId">
-                  <option value="0" selected disabled>Seleccione</option>
+                  <option value="" selected disabled>Seleccione</option>
                   <option *ngFor="let item of listMunicipios" [value]="item.id">
                     {{item.name}}
                   </option>
