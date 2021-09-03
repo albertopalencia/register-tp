@@ -47,7 +47,7 @@ namespace Test.Application.Implements
 			if (userEntity is null)
 			{
 				var randon = RandomNumberGeneratorUtil.Create();
-				response.Message = UserMessageResource.Tramite + "(" + randon  + ") " +  UserMessageResource.NoExiste;
+				response.Message = UserMessageResource.Tramite + "(" + randon  + ")\r\n" +  UserMessageResource.NoExiste;
 			}
 			else
 			{

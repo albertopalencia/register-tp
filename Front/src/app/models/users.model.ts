@@ -1,5 +1,5 @@
-import { IdentificationType } from "./IdentificationType";
-import { Municipio } from "./Municipio";
+import { IdentificationType } from "./identificationtype.model";
+import { Municipio } from "./municipio.model";
 
 export class User {
   id:                   number;
