@@ -1,7 +1,7 @@
 <div class="container-fluid">
 
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" *ngIf="!showUser">
       <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
           <h5 class="m-0 font-weight-bold text-black">Inscripci&oacute;n al servicio</h5>
@@ -16,11 +16,12 @@
           </div>
           <form class="buscar" [formGroup]="formSearch">
             <div class="form-group">
-              <input type="text" class="form-control" formControlName="nit" placeholder="Nit" minlength="8"
+              <input type="text" class="form-control" formControlName="nit"  minlength="8"
                 maxlength="14" [class.is-invalid]="nitNoValido">
             </div>
-            <div class="btn-group  btn-block">
-              <button type="button" (click)="buscarRegistro()" class="btn btn-danger" [disabled]="!formSearch.valid">Continuar</button>&nbsp;
+            <div class="btn-group btnsearch btn-block">
+              <button type="button" (click)="buscarRegistro()" class="btn btnsearch"
+                [disabled]="!formSearch.valid">Continuar</button>&nbsp;
               <button type="reset" class="btn btn-dark">Regresar</button>
             </div>
           </form>
@@ -45,7 +46,7 @@
               <div class="col-md-12">
                 <label for="usuarioId">Naturaleza:<small class="color-required">*</small></label>
                 <select class="form-control " id="tipoIdentificacionId"
-                  (change)="onIdentificationChange($event.target.value)">
+                  (change)="onIdentificationChange($event.target.value)" formControlName="identificationTypeId"   >
                   <option value="" selected disabled>Seleccione</option>
                   <option *ngFor="let item of listIdentification" [value]="item.id">
                     {{item.type}}
@@ -70,41 +71,73 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="firstName">SecondName:</label>
-                    <input type="text" class="form-control">
+                    <input type="text" id="secondName" class="form-control" formControlName="secondName">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label for="firstName">FirstLastName:<small class="color-required">*</small></label>
-                    <input type="text" class="form-control">
+                    <label for="firstName">First LastName:<small class="color-required">*</small></label>
+                    <input type="text" id="firstLastName" class="form-control" formControlName="firstLastName">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label for="firstName">Second LastName: </label>
-                    <input type="text" class="form-control">
+                    <input type="text" id="secondLastName" class="form-control" formControlName="secondLastName">
                   </div>
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-md-6">
                   <label for="firstName">E-mail: </label>
-                  <input type="email" class="form-control"  >
+                  <input type="email" class="form-control" formControlName="email">
+                </div>
+              </div>
+            </div>
+            <div class="form-group row" formGroupName="nomenclature">
+              <div class="form-row col">
+                <div class="col">
+                  <label for="via">Via:</label>
+                  <select class="form-control " id="via" formControlName="via" >
+                    <option *ngFor="let item of listVias" [value]="item">
+                      {{item}}
+                    </option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="nro">Nro:<small class="color-required">*</small></label>
+                  <input type="text" class="form-control" formControlName="nro" [class.is-invalid]="nroNoValido">
+                </div>
+                <div class="col">
+                  <label for="letra">Letra:</label>
+                  <input type="text" class="form-control" formControlName="letra">
+                </div>
+                <div class="col">
+                  <label for="nro1">Nro:<small class="color-required">*</small></label>
+                  <input type="text" class="form-control" formControlName="nro1" [class.is-invalid]="nro1NoValido">
+                </div>
+                <div class="col">
+                  <label for="letra1">Letra:</label>
+                  <input type="text" class="form-control" formControlName="letra1">
+                </div>
+                <div class="col">
+                  <label for="nroComplemento">Nro y Complemento:<small class="color-required">*</small></label>
+                  <input type="text" class="form-control" formControlName="nroComplemento"  [class.is-invalid]="nroComplementoNoValido">
                 </div>
               </div>
             </div>
             <div class="form-group row">
               <div class="col-md-12">
                 <label for="direccion">Direcci&oacute;n:<small class="color-required">*</small></label>
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" formControlName="address"  [value]="direccion()" disabled="disabled">
               </div>
             </div>
             <div class="form-group row">
               <div class="col-md-12">
                 <label for="municipioId">Municipio:<small class="color-required">*</small></label>
-                <select class="form-control " id="municipioId">
+                <select class="form-control " id="municipioId" formControlName="municipioId">
                   <option value="" selected disabled>Seleccione</option>
                   <option *ngFor="let item of listMunicipios" [value]="item.id">
                     {{item.name}}
@@ -114,12 +147,15 @@
             </div>
             <div class="form-group row">
               <div class="col-md-6">
-                <label for="usuarioId">Telefono 1:*</label>
-                <input type="text" class="form-control" id="cellphone" >
+                <label for="usuarioId">Telefono:<small class="color-required">*</small></label>
+                <input type="text" class="form-control" id="cellphone" formControlName="cellPhone">
               </div>
             </div>
             <br>
-            <button type="submit" class="btn btn btn-danger btn-block">Continuar</button>
+            <div class="btn-group btn-danger btn-block">
+              <button type="submit" class="btn btn-danger" [disabled]="!form.valid">Continuar</button>&nbsp;
+              <button type="reset" class="btn btn-dark" (click) = "backSearch()" >Regresar</button>
+            </div>
           </form>
         </div>
       </div>

@@ -61,6 +61,15 @@ namespace Test.Common.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Se ha actualizado los datos de la  empresa.
+        /// </summary>
+        public static string Actualizado {
+            get {
+                return ResourceManager.GetString("Actualizado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El tramite se ha creado exitosamente.
         /// </summary>
         public static string Creado {

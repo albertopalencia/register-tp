@@ -73,5 +73,19 @@ namespace Test.Api.Controllers
 			var userCreated = await _userService.Create(user);
 			return CreatedAtAction("CreateUser", userCreated);
 		}
+
+		/// <summary>
+		/// actualiza un nuevo usuario
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <returns>Task&lt;IActionResult&gt;.</returns>
+		[HttpPost("Update")]
+		[ProducesResponseType((int)HttpStatusCode.Created, Type = typeof(ResponseGenericDto<bool>))]
+		[ProducesResponseType((int)HttpStatusCode.BadRequest)]
+		public async Task<IActionResult> UpdateUser(UserUpdateDto user)
+		{
+			var updated = await _userService.Update(user);
+			return CreatedAtAction("UpdateUser", updated);
+		}
 	}
 }

@@ -1,5 +1,7 @@
+import { Nomenclature } from './../../models/users.model';
+import { UserConvert } from './../../models/userconvert.model';
 import { User } from '../../models/users.model';
-import { Component,  OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService } from '@services/data.service';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +9,7 @@ import Swal from 'sweetalert2';
 import { IdentificationType } from '@src/app/models/identificationtype.model';
 import { ResponseData } from '@src/app/models/responsedata.model';
 import { Municipio } from '@src/app/models/municipio.model';
+
 
 @Component({
   selector: 'app-inicio',
@@ -20,13 +23,35 @@ export class InicioComponent implements OnInit {
   form: FormGroup;
   showUser: boolean;
   showFieldUser: boolean;
+  newUser: boolean = false;
 
   listIdentification: IdentificationType[];
   listMunicipios: Municipio[];
+  listVias: any[] = [
+    'AUTOPISTA',
+    'AVENIDA',
+    'AVENIDA CALLE',
+    'AVENIDA CARRERA',
+    'BULEVAR',
+    'CALLE',
+    'CARRERA',
+    'CARRETERA',
+    'CIRCULAR',
+    'CIRCUNVALAR',
+    'DIAGONAL',
+    'MANZANA',
+    'PASAJE',
+    'PASEO',
+    'PEATONAL',
+    'TRANSVERSAL',
+    'TRONCAL',
+    'VARIANTE',
+    'VÍA'
+    ];
 
   constructor(private fb: FormBuilder, private dataService: DataService) {
     this.formBuscar();
-   // this.formRegistro();
+    this.formRegistro();
   }
 
 
@@ -49,11 +74,7 @@ export class InicioComponent implements OnInit {
   // FORM REGISTRAR //
 
   get identificationTypeNoValido() {
-    return this.form.get('nombre').invalid && this.form.get('nombre').touched
-  }
-
-  get identificationNumberNoValido() {
-    return this.form.get('identificationNumber').invalid && this.form.get('identificationNumber').touched
+    return this.form.get('identificationTypeId').invalid && this.form.get('identificationTypeId').touched
   }
 
   get correoNoValido() {
@@ -65,65 +86,81 @@ export class InicioComponent implements OnInit {
   }
 
   get nroNoValido() {
-    return this.form.get('compuesta.Nro').invalid && this.form.get('compuesta.Nro').touched
+    return this.form.get('nomenclature.nro').invalid && this.form.get('nomenclature.nro').touched
   }
 
   get nro1NoValido() {
-    return this.form.get('compuesta.Nro1').invalid && this.form.get('compuesta.Nro1').touched
+    return this.form.get('nomenclature.nro1').invalid && this.form.get('nomenclature.nro1').touched
   }
 
   get nroComplementoNoValido() {
-    return this.form.get('compuesta.NroComplemento').invalid && this.form.get('compuesta.NroComplemento').touched
+    return this.form.get('nomenclature.nroComplemento').invalid && this.form.get('nomenclature.nroComplemento').touched
   }
 
+
   formBuscar() {
-    this. formSearch = this.fb.group({
+    this.formSearch = this.fb.group({
       nit: ['', {
         validators: [Validators.required, Validators.pattern('[0-9]+')]
-      } ]
+      }]
     });
   }
 
   formRegistro() {
     this.form = this.fb.group({
-      identificationTypeId: ['', Validators.required],
+      identificationTypeId: [ { value: '', disabled: false }, [Validators.required]],
       identificationNumber: [''],
       companyName: [''],
       firstName: [''],
       secondName: [''],
       firstLastName: [''],
       secondLastName: [''],
-      municipio: ['',  Validators.required],
-      compuesta: this.fb.group({
-        Via: [''],
-        Nro  : ['', Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(1), Validators.maxLength(2) ],
-        Letra  : [''],
-        Nro1  : ['', Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(1), Validators.maxLength(2)  ],
-        NroComplemento  : ['', Validators.required ],
+      municipioId: ['', [Validators.required]],
+      nomenclature: this.fb.group({
+        via: [''],
+        nro: ['', [Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(1), Validators.maxLength(2)]],
+        letra: [''],
+        nro1: ['', [Validators.required, Validators.pattern('[0-9]+'), Validators.minLength(1), Validators.maxLength(2)]],
+        letra1: [''],
+        nroComplemento: ['', [Validators.required]],
       }),
-      address: ['',  Validators.required],
-      email: ['', [  Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
-      cellPhone:  ['',  Validators.required, Validators.pattern('[0-9]+')]
-   });
+      address: ['', [Validators.required]],
+      email: ['', [Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+      cellPhone: ['', [Validators.required, Validators.pattern('[0-9]+')]]
+    });
   }
 
 
   loadMunicipios() {
     this.dataService.getMunicipios()
-    .subscribe((response: ResponseData) => {
-      this.listMunicipios = response.result as Municipio[];
-    });
+      .subscribe((response: ResponseData) => {
+        this.listMunicipios = response.result as Municipio[];
+      });
   }
   loadIndentificationTypes() {
     this.dataService.getIdentificationTypes()
-    .subscribe((response: ResponseData) => {
-      this.listIdentification = response.result as IdentificationType[];
-    });
+      .subscribe((response: ResponseData) => {
+        this.listIdentification = response.result as IdentificationType[];
+      });
   }
 
-
   onIdentificationChange(id: number): void {
-     this.showFieldUser =  id != 1 ? true : false ;
+    this.showFieldUser = id != 1 ? true : false;
+
+    if (!this.newUser) {
+      if (!this.showFieldUser ) {
+        this.form.get('identificationTypeId').disable();
+      } else {
+        this.form.get('identificationTypeId').enable();
+      }
+    }
+
+}
+
+  direccion() {
+    let form = this.form.value;
+    let address = Nomenclature.transformAddress(form.nomenclature,' ');
+    return address;
   }
 
 
@@ -137,27 +174,77 @@ export class InicioComponent implements OnInit {
         }
       });
     }
-    else  {
+    else {
 
       this.dataService.getValidateUser(this.nit.value)
-      .subscribe((response: ResponseData) => {
-       this.user = response.result;
-       this.showUser = true;
-       //this.form.setValue(this.user)
+        .subscribe((response: ResponseData) => {
+          this.user = response.result;
+          this.showUser = true;
+          if (this.user) {
+            this.newUser = false;
+            this.form.reset({
+              identificationTypeId: this.user.identificationTypeId,
+              identificationNumber: this.nit.value,
+              companyName: this.user.companyName,
+              firstName: this.user.firstName,
+              secondName: this.user.secondName,
+              firstLastName: this.user.firstLastName,
+              secondLastName: this.user.secondLastName,
+              municipioId: this.user.municipioId,
+              address: this.user.address,
+              email: this.user.email,
+              cellPhone: this.user.cellPhone,
+              nomenclature: this.user.nomenclature,
+            });
+            this.onIdentificationChange(this.user.identificationTypeId);
+          }else {
+            this.form.reset();
+            this.newUser = true;
+            this.onIdentificationChange(0);
+          }
 
-        Swal.fire({
-          title: 'Información',
-          text: response.message,
-          icon: 'info',
-          confirmButtonText: 'Aceptar'
+            Swal.fire({
+                title: 'Información',
+                text: response.message,
+                icon: 'info',
+                confirmButtonText: 'Aceptar'
+              });
+
         });
-
-      });
     }
   }
 
-  guardarRegistro(){
+  guardarRegistro(): void {
+    let user: User = this.form.value;
+    user.id = this.user.id;
+    user.identificationTypeId = this.form.get('identificationTypeId').value;
+    user.address =  Nomenclature.transformAddress(user.nomenclature,'-');
+
+    if (!user.id) {
+      this.dataService.postCreateUser(user).subscribe((response: any) => {
+          Swal.fire({
+            title: 'Información',
+            text: response.message,
+            icon: response.success ? 'success': 'error',
+            confirmButtonText: 'Aceptar'
+          });
+      });
+    } else {
+      this.dataService.postUpdateUser(user).subscribe((response: any) => {
+        Swal.fire({
+          title: 'Información',
+          text: response.message,
+          icon: response.success ? 'success': 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      });
+    }
 
   }
 
+  backSearch(){
+    this.showUser = !this.showUser;
+    this.nit.setValue('');
+    this.form.get('identificationTypeId').enable();
+  }
 }

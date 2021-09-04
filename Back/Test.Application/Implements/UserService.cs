@@ -91,6 +91,42 @@ namespace Test.Application.Implements
 		}
 
 		/// <summary>
+		/// Updated the specified user.
+		/// </summary>
+		/// <param name="user">The user.</param>
+		/// <returns>Task&lt;UserResponseDto&gt;.</returns>
+		/// <exception cref="NotImplementedException"></exception>
+		public async Task<ResponseGenericDto<bool>> Update(UserUpdateDto user)
+		{
+			var userUpdate = await FirstUserOrDefaultAsync(u => u.Id == user.Id);
+			var response = new ResponseGenericDto<bool> { Success = false };
+			if (userUpdate is null)
+			{
+				response.Message = UserMessageResource.NoExiste;
+			}
+			else
+			{
+
+				userUpdate.CompanyName = user.CompanyName;
+				userUpdate.Address = user.Address;
+				userUpdate.Email = user.Email;
+				userUpdate.FirstLastName = user.FirstLastName;
+				userUpdate.IdentificationTypeId = user.IdentificationTypeId;
+				userUpdate.IdentificationNumber = user.IdentificationNumber;
+				userUpdate.FirstName = user.FirstName;
+				userUpdate.MunicipioId = user.MunicipioId;
+				userUpdate.SecondLastName = user.SecondLastName;
+				userUpdate.SecondName = user.SecondName;
+				userUpdate.CellPhone = user.CellPhone;
+				_repository.Update(userUpdate);
+				response.Message = UserMessageResource.Actualizado;
+				response.Success = true;
+			}
+
+			return response;
+		}
+
+		/// <summary>
 		/// Gets the name of the by user.
 		/// </summary>
 		/// <param name="userFunc">The user function.</param>
@@ -107,5 +143,6 @@ namespace Test.Application.Implements
 		/// <exception cref="Exception"></exception>
 		/// <exception cref="ArgumentNullException"></exception>
 		internal static void GenerateException(string error) => throw new Exception(error);
+		
 	}
 }

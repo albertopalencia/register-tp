@@ -15,6 +15,10 @@ export class DataService {
     return this.Https.post(`${environment.url}User`, usuario);
   }
 
+  postUpdateUser(usuario: User) {
+    return this.Https.post(`${environment.url}User/Update`, usuario);
+  }
+
   getValidateUser(nit: string) {
     return this.Https.get<ResponseData>(`${environment.url}User/Validate?identificationNumber=${nit}`);
   }

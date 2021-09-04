@@ -20,6 +20,8 @@ namespace Test.Application.Abstract
  
 		Task<ResponseGenericDto<bool>> Create(UserCreateDto user);
 
+		Task<ResponseGenericDto<bool>> Update(UserUpdateDto user);
+
 		Task<ResponseGenericDto<List<UserListDto>>> UserList();
 	}
 }
